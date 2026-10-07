@@ -1,0 +1,170 @@
+{
+  "info": {
+    "name": "Books REST API",
+    "description": "CRUD + pagination/filtering demo for the rest-api-crud project. Import into Postman and hit Send.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:5000/api/v1" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/health", "host": ["{{base_url}}"], "path": ["health"] }
+      }
+    },
+    {
+      "name": "List books (paginated, sorted)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/books?page=1&per_page=10&sort=year&order=desc",
+          "host": ["{{base_url}}"],
+          "path": ["books"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "per_page", "value": "10" },
+            { "key": "sort", "value": "year" },
+            { "key": "order", "value": "desc" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Search books (q=fowler)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/books?q=fowler&genre=Software",
+          "host": ["{{base_url}}"],
+          "path": ["books"],
+          "query": [
+            { "key": "q", "value": "fowler" },
+            { "key": "genre", "value": "Software" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get one book",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/books/1",
+          "host": ["{{base_url}}"],
+          "path": ["books", "1"]
+        }
+      }
+    },
+    {
+      "name": "Create book (201)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Refactoring\",\n  \"author\": \"Martin Fowler\",\n  \"year\": 1999,\n  \"genre\": \"Software\",\n  \"rating\": 4.5\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/books",
+          "host": ["{{base_url}}"],
+          "path": ["books"]
+        }
+      }
+    },
+    {
+      "name": "Create book — missing required fields (400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"year\": 2000\n}" },
+        "url": {
+          "raw": "{{base_url}}/books",
+          "host": ["{{base_url}}"],
+          "path": ["books"]
+        }
+      }
+    },
+    {
+      "name": "Create book — unknown field (400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"X\",\n  \"author\": \"Y\",\n  \"admin\": true\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/books",
+          "host": ["{{base_url}}"],
+          "path": ["books"]
+        }
+      }
+    },
+    {
+      "name": "PUT — full replacement (200)",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Refactoring (2nd ed.)\",\n  \"author\": \"Martin Fowler\",\n  \"year\": 2018,\n  \"genre\": \"Software\",\n  \"rating\": 4.7\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/books/1",
+          "host": ["{{base_url}}"],
+          "path": ["books", "1"]
+        }
+      }
+    },
+    {
+      "name": "PATCH — partial update (200)",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"rating\": 4.9\n}" },
+        "url": {
+          "raw": "{{base_url}}/books/1",
+          "host": ["{{base_url}}"],
+          "path": ["books", "1"]
+        }
+      }
+    },
+    {
+      "name": "Delete book (204)",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "{{base_url}}/books/1",
+          "host": ["{{base_url}}"],
+          "path": ["books", "1"]
+        }
+      }
+    },
+    {
+      "name": "Get missing book (404)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/books/9999",
+          "host": ["{{base_url}}"],
+          "path": ["books", "9999"]
+        }
+      }
+    },
+    {
+      "name": "Bad sort param (400)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/books?sort=password",
+          "host": ["{{base_url}}"],
+          "path": ["books"],
+          "query": [{ "key": "sort", "value": "password" }]
+        }
+      }
+    }
+  ]
+}
